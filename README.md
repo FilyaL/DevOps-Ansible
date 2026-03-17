@@ -1,6 +1,6 @@
 ТЗ: Написание Ansible скрипта для настройки openldap на Ubuntu LTS
 
-Функии скрипта:
+Функции скрипта:
  1. устанавливает OpenLDAP сервер
  2. задаёт LDAP domain (example.com) и organization (ExampleOrg)
  3. задаёт администратора (cn=admin,dc=example,dc=com)
