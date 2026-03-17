@@ -24,4 +24,4 @@ ansible-playbook -i inventory.ini playbook.yml
 
 ldapsearch -x -LLL -D "cn=admin,dc=example,dc=com" -w AdminPass123 -b "dc=example,dc=com"
 
-![Uploading image.png…]()
+![result](result.png)
