@@ -1,0 +1,97 @@
+---
+- hosts: ldap
+  become: yes
+  tasks:
+    - apt:
+        name:
+          - slapd
+          - ldap-utils
+        state: present
+        update_cache: yes
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+
+    - service:
+        name: slapd
+        state: started
+        enabled: yes
+
+    - copy:
+        dest: /tmp/db.ldif
+        content: |
+          dn: olcDatabase={1}mdb,cn=config
+          changetype: modify
+          replace: olcSuffix
+          olcSuffix: dc=example,dc=com
+
+          dn: olcDatabase={1}mdb,cn=config
+          changetype: modify
+          replace: olcRootDN
+          olcRootDN: cn=admin,dc=example,dc=com
+
+          dn: olcDatabase={1}mdb,cn=config
+          changetype: modify
+          replace: olcRootPW
+          olcRootPW: AdminPass123
+
+    - command: ldapmodify -Y EXTERNAL -H ldapi:/// -f /tmp/db.ldif
+
+    - service:
+        name: slapd
+        state: restarted
+
+    - copy:
+        dest: /tmp/base.ldif
+        content: |
+          dn: dc=example,dc=com
+          objectClass: top
+          objectClass: dcObject
+          objectClass: organization
+          o: ExampleOrg
+          dc: example
+
+    - command: ldapadd -x -D "cn=admin,dc=example,dc=com" -w AdminPass123 -f /tmp/base.ldif
+
+    - copy:
+        dest: /tmp/user1.ldif
+        content: |
+          dn: uid=user1,dc=example,dc=com
+          objectClass: inetOrgPerson
+          uid: user1
+          sn: user1
+          cn: user1
+          userPassword: User1Pass
+
+    - command: ldapadd -x -D "cn=admin,dc=example,dc=com" -w AdminPass123 -f /tmp/user1.ldif
+
+    - copy:
+        dest: /tmp/user2.ldif
+        content: |
+          dn: uid=user2,dc=example,dc=com
+          objectClass: inetOrgPerson
+          uid: user2
+          sn: user2
+          cn: user2
+          userPassword: User2Pass
+
+    - command: ldapadd -x -D "cn=admin,dc=example,dc=com" -w AdminPass123 -f /tmp/user2.ldif
+
+    - copy:
+        dest: /tmp/group1.ldif
+        content: |
+          dn: cn=group1,dc=example,dc=com
+          objectClass: posixGroup
+          cn: group1
+          gidNumber: 1000
+
+    - command: ldapadd -x -D "cn=admin,dc=example,dc=com" -w AdminPass123 -f /tmp/group1.ldif
+
+    - copy:
+        dest: /tmp/group2.ldif
+        content: |
+          dn: cn=group2,dc=example,dc=com
+          objectClass: posixGroup
+          cn: group2
+          gidNumber: 1001
+
+    - command: ldapadd -x -D "cn=admin,dc=example,dc=com" -w AdminPass123 -f /tmp/group2.ldif
