@@ -14,9 +14,7 @@ inventory.ini — inventory для запуска
 
 Требования:
 
-Ubuntu LTS
-Ansible
-Python 3
+Ubuntu LTS, Ansible, Python 3
 
 Комада для запуска скрипта:
 
