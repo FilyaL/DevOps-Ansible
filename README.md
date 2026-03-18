@@ -3,7 +3,7 @@
 Функции скрипта:
  1. устанавливает OpenLDAP сервер
  2. задаёт LDAP domain (example.com) и organization (ExampleOrg)
- 3. задаёт администратора (cn=admin,dc=example,dc=com)
+ 3. задаёт администратора
  4. добавляет 2 пользователя (user1, user2)
  5. добавляет 2 группы (group1, group2)
 
